@@ -1,0 +1,300 @@
+/* ==================== RESET & BASE ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  transition: 0.3s;
+  background: #f4f6f9;
+  padding: 20px;
+  color: #333;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 32px;
+  color: #1f2937;
+}
+
+.header p {
+  margin-top: 8px;
+  color: #6b7280;
+}
+
+/* ==================== KPI GRID & CARDS ==================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.kpi-card {
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-title {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.kpi-value {
+  font-size: 34px;
+  font-weight: bold;
+}
+
+/* ==================== STATUS COLORS ==================== */
+.good {
+  color: #16a34a;
+}
+
+.warning {
+  color: #d97706;
+}
+
+.bad {
+  color: #dc2626;
+}
+
+/* ==================== CHARTS ==================== */
+.charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.chart-card {
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h3 {
+  margin-bottom: 15px;
+  color: #1f2937;
+}
+
+/* ==================== TABLE ==================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+th,
+td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+  background: #111827;
+  color: white;
+  font-weight: bold;
+}
+
+/* ==================== STATUS BADGES ==================== */
+.status {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.excelente {
+  background: #16a34a;
+}
+
+.bom {
+  background: #d97706;
+}
+
+.ruim {
+  background: #dc2626;
+}
+
+.medio {
+  background: #6b7280;
+}
+
+/* ==================== BUTTONS ==================== */
+.toggle-btn {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.toggle-btn:hover {
+  background: #1f2937;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.info-box {
+  padding: 14px;
+  background: #f3f4f6;
+  border-radius: 14px;
+}
+
+.info-box strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.info-box-value {
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.pause-item {
+  padding: 14px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border-left: 6px solid;
+}
+
+.pause-name {
+  font-weight: bold;
+}
+
+.pause-time {
+  margin-top: 5px;
+  color: #6b7280;
+}
+
+/* ==================== LAYOUT GRIDS ==================== */
+.grid-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.grid-1-5-1 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* ==================== DARK MODE ==================== */
+.dark-mode {
+  background: #111827;
+  color: #f3f4f6;
+}
+
+.dark-mode .kpi-card,
+.dark-mode .chart-card,
+.dark-mode table {
+  background: #1f2937;
+  color: white;
+}
+
+.dark-mode th {
+  background: #000;
+}
+
+.dark-mode .toggle-btn {
+  background: white;
+  color: #111827;
+}
+
+.dark-mode .toggle-btn:hover {
+  background: #f3f4f6;
+}
+
+.dark-mode .info-box {
+  background: #374151;
+  color: #f3f4f6;
+}
+
+.dark-mode .pause-item {
+  background: #374151;
+}
+
+.dark-mode .pause-time {
+  color: #d1d5db;
+}
+
+.dark-mode .chart-card h3 {
+  color: #f3f4f6;
+}
+
+.dark-mode .kpi-title {
+  color: #d1d5db;
+}
+
+.dark-mode th,
+.dark-mode td {
+  border-bottom-color: #374151;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-2-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-1-5-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .kpi-value {
+    font-size: 24px;
+  }
+
+  .flex-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
