@@ -396,27 +396,34 @@
 
     function extrairHora(horaString) {
       if (!horaString) return null;
-      // Formato: dd/mm/yyyy hh:mm
-      // Extrair a hora (posição após o espaço)
-      const partes = horaString.split(' ');
-      if (partes.length < 2) return null;
       
-      const tempo = partes[1]; // pega "hh:mm"
-      const match = tempo.match(/(\d{1,2}):/);
-      return match ? parseInt(match[1]) : null;
+      // Formato esperado: "22/05/2026 08:25"
+      // Procura por padrão HH:MM após um espaço
+      const match = horaString.match(/\s(\d{1,2}):/);
+      if (match) {
+        const hora = parseInt(match[1]);
+        return (hora >= 9 && hora <= 17) ? hora : null;
+      }
+      return null;
     }
 
     async function carregarCSV() {
       Papa.parse('Produtividade.csv', {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: function(results) {
+          console.log('CSV carregado:', results.data.length, 'linhas');
+          
           if(!results.data || results.data.length === 0) {
             document.getElementById('tabelaCorpo').innerHTML = '<tr><td colspan="3" class="loading-message">Nenhum dado encontrado no CSV</td></tr>';
             return;
           }
 
-          const dados = results.data.filter(d => d['Nome do Usuário']); // Remove linhas vazias
+          // Filtra linhas com Nome do Usuário válido
+          const dados = results.data.filter(d => d['Nome do Usuário'] && d['Nome do Usuário'].trim());
+          
+          console.log('Dados válidos:', dados.length);
           
           if(dados.length === 0) {
             document.getElementById('tabelaCorpo').innerHTML = '<tr><td colspan="3" class="loading-message">Nenhum dado válido no CSV</td></tr>';
@@ -432,21 +439,26 @@
           }
 
           // Processar dados
-          dados.forEach(item => {
-            const nome = item['Nome do Usuário'];
+          dados.forEach((item, index) => {
+            const nome = item['Nome do Usuário'].trim();
             const horaString = item['Hora'];
-            const hora = extrairHora(horaString);
 
             if(!colaboradores[nome]) {
               colaboradores[nome] = 0;
             }
             colaboradores[nome]++;
 
-            // Contar por hora
-            if(hora !== null && horarios.hasOwnProperty(hora)) {
+            // Extrair e contar hora
+            const hora = extrairHora(horaString);
+            if(hora !== null) {
               horarios[hora]++;
+            } else if(index < 3) {
+              console.log('Hora não parseada:', horaString);
             }
           });
+
+          console.log('Colaboradores:', colaboradores);
+          console.log('Horários:', horarios);
 
           const ranking = Object.entries(colaboradores)
             .sort((a,b) => b[1] - a[1]);
@@ -467,7 +479,7 @@
           // Atualizar gráficos
           atualizarGraficos(ranking, horarios);
 
-          // Atualizar pausas (se houver coluna de pausa)
+          // Atualizar pausas
           atualizarPausas(dados);
         },
         error: function(error) {
@@ -549,7 +561,9 @@
               borderColor: '#2563eb',
               backgroundColor: 'rgba(37,99,235,0.2)',
               fill: true,
-              tension: 0.4
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#2563eb'
             }]
           },
           options: {
