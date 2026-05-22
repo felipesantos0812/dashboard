@@ -326,7 +326,7 @@
 
         <div class="info-box">
           <strong>Encerramento</strong>
-          <div style="font-size:26px;font-weight:bold;margin-top:5px;" id="encerramento">18:00</div>
+          <div style="font-size:26px;font-weight:bold;margin-top:5px;" id="encerramento">17:00</div>
         </div>
 
       </div>
@@ -394,6 +394,13 @@
       return '#6b7280';
     }
 
+    function extrairHora(horaString) {
+      if (!horaString) return null;
+      // Tenta extrair apenas a hora (formato HH:MM ou HH)
+      const match = horaString.match(/(\d{1,2}):/);
+      return match ? parseInt(match[1]) : null;
+    }
+
     async function carregarCSV() {
       Papa.parse('Produtividade.csv', {
         download: true,
@@ -414,21 +421,24 @@
           let colaboradores = {};
           let horarios = {};
 
+          // Inicializar horas de 09 a 17
+          for(let i = 9; i <= 17; i++) {
+            horarios[i] = 0;
+          }
+
           // Processar dados
           dados.forEach(item => {
             const nome = item['Nome do Usuário'];
-            const hora = item['Hora']; // Coluna de hora (se existir)
+            const horaString = item['Hora'];
+            const hora = extrairHora(horaString);
 
             if(!colaboradores[nome]) {
               colaboradores[nome] = 0;
             }
             colaboradores[nome]++;
 
-            // Contar por hora se existir
-            if(hora && !horarios[hora]) {
-              horarios[hora] = 0;
-            }
-            if(hora) {
+            // Contar por hora
+            if(hora !== null && horarios.hasOwnProperty(hora)) {
               horarios[hora]++;
             }
           });
@@ -513,9 +523,13 @@
         });
       }
 
-      // Gráfico de Produtividade por Hora
-      const horasOrdenadas = Object.keys(horarios).sort();
-      const dadosHora = horasOrdenadas.map(h => horarios[h]);
+      // Gráfico de Produtividade por Hora (09h a 17h)
+      const horasLabels = [];
+      const horasDados = [];
+      for(let i = 9; i <= 17; i++) {
+        horasLabels.push(i + 'h');
+        horasDados.push(horarios[i] || 0);
+      }
 
       if(hourChart) hourChart.destroy();
       const hourCtx = document.getElementById('hourChart');
@@ -523,10 +537,10 @@
         hourChart = new Chart(hourCtx, {
           type: 'line',
           data: {
-            labels: horasOrdenadas.length > 0 ? horasOrdenadas : ['09h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h'],
+            labels: horasLabels,
             datasets: [{
               label: 'Pedidos por Hora',
-              data: dadosHora.length > 0 ? dadosHora : [320, 580, 760, 420, 390, 680, 810, 920, 870, 620],
+              data: horasDados,
               borderColor: '#2563eb',
               backgroundColor: 'rgba(37,99,235,0.2)',
               fill: true,
