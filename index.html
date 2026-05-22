@@ -396,8 +396,13 @@
 
     function extrairHora(horaString) {
       if (!horaString) return null;
-      // Tenta extrair apenas a hora (formato HH:MM ou HH)
-      const match = horaString.match(/(\d{1,2}):/);
+      // Formato: dd/mm/yyyy hh:mm
+      // Extrair a hora (posição após o espaço)
+      const partes = horaString.split(' ');
+      if (partes.length < 2) return null;
+      
+      const tempo = partes[1]; // pega "hh:mm"
+      const match = tempo.match(/(\d{1,2}):/);
       return match ? parseInt(match[1]) : null;
     }
 
