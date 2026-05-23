@@ -1,300 +1,225 @@
-/* ==================== RESET & BASE ==================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-body {
-  transition: 0.3s;
-  background: #f4f6f9;
-  padding: 20px;
-  color: #333;
+body{
+  font-family:'Inter',sans-serif;
+  background:#f1f5f9;
+  color:#0f172a;
+  padding:20px;
+  transition:.3s;
 }
 
-/* ==================== HEADER ==================== */
-.header {
-  margin-bottom: 25px;
+/* =========================
+   TOPO
+========================= */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
 }
 
-.header h1 {
-  font-size: 32px;
-  color: #1f2937;
+.top-right{
+  display:flex;
+  gap:20px;
+  align-items:center;
 }
 
-.header p {
-  margin-top: 8px;
-  color: #6b7280;
+.clock{
+  font-size:42px;
+  font-weight:900;
 }
 
-/* ==================== KPI GRID & CARDS ==================== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+.date{
+  margin-top:6px;
+  color:#64748b;
+  font-weight:700;
 }
 
-.kpi-card {
-  background: white;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: 0.3s;
+.toggle-btn{
+  border:none;
+  background:#2563eb;
+  color:white;
+  padding:12px 16px;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
 }
 
-.kpi-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+/* =========================
+   ABAS (NOVO)
+========================= */
+
+.tabs{
+  display:flex;
+  gap:12px;
+  margin:20px 0;
 }
 
-.kpi-title {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 10px;
+.tabs button{
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+  background:#e2e8f0;
+  color:#0f172a;
+  transition:.2s;
 }
 
-.kpi-value {
-  font-size: 34px;
-  font-weight: bold;
+.tabs button:hover{
+  background:#cbd5e1;
 }
 
-/* ==================== STATUS COLORS ==================== */
-.good {
-  color: #16a34a;
+/* =========================
+   LAYOUT
+========================= */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
 }
 
-.warning {
-  color: #d97706;
+.card{
+  background:white;
+  border-radius:28px;
+  padding:24px;
+  box-shadow:0 10px 25px rgba(15,23,42,.05);
 }
 
-.bad {
-  color: #dc2626;
+.kpi-title{
+  color:#64748b;
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
 }
 
-/* ==================== CHARTS ==================== */
-.charts {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
+.kpi-value{
+  margin-top:14px;
+  font-size:42px;
+  font-weight:900;
 }
 
-.chart-card {
-  background: white;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:22px;
 }
 
-.chart-card h3 {
-  margin-bottom: 15px;
-  color: #1f2937;
+.card h2{
+  margin-bottom:18px;
+  font-size:20px;
+  font-weight:900;
 }
 
-/* ==================== TABLE ==================== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  background: white;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+/* =========================
+   TABELA
+========================= */
+
+table{
+  width:100%;
+  border-collapse:collapse;
 }
 
-th,
-td {
-  padding: 14px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+thead{
+  background:#2563eb;
 }
 
-th {
-  background: #111827;
-  color: white;
-  font-weight: bold;
+th{
+  color:white;
+  padding:18px;
+  text-align:left;
+  font-size:13px;
+  font-weight:900;
 }
 
-/* ==================== STATUS BADGES ==================== */
-.status {
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  color: white;
+td{
+  padding:18px;
+  border-bottom:1px solid #e5e7eb;
+  font-weight:800;
+  font-size:14px;
 }
 
-.excelente {
-  background: #16a34a;
+/* =========================
+   STATUS
+========================= */
+
+.status{
+  padding:6px 10px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:12px;
 }
 
-.bom {
-  background: #d97706;
+.excelente{background:#16a34a;color:white;}
+.bom{background:#4ade80;color:#052e16;}
+.medio{background:#facc15;color:#1f2937;}
+.ruim{background:#dc2626;color:white;}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dark-mode{
+  background:#020617;
+  color:white;
 }
 
-.ruim {
-  background: #dc2626;
+.dark-mode .card{
+  background:#111827;
+  color:white;
 }
 
-.medio {
-  background: #6b7280;
+.dark-mode td{
+  border-color:#1e293b;
 }
 
-/* ==================== BUTTONS ==================== */
-.toggle-btn {
-  background: #111827;
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+.dark-mode .tabs button{
+  background:#1e293b;
+  color:white;
 }
 
-.toggle-btn:hover {
-  background: #1f2937;
+.dark-mode .tabs button:hover{
+  background:#334155;
 }
 
-/* ==================== UTILITY CLASSES ==================== */
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+/* =========================
+   ABA HORAS
+========================= */
+
+#aba-horas{
+  display:none;
 }
 
-.info-box {
-  padding: 14px;
-  background: #f3f4f6;
-  border-radius: 14px;
-}
+/* =========================
+   RESPONSIVO
+========================= */
 
-.info-box strong {
-  display: block;
-  margin-bottom: 5px;
-}
+@media(max-width: 900px){
 
-.info-box-value {
-  font-size: 26px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-.pause-item {
-  padding: 14px;
-  border-radius: 14px;
-  background: #f9fafb;
-  border-left: 6px solid;
-}
-
-.pause-name {
-  font-weight: bold;
-}
-
-.pause-time {
-  margin-top: 5px;
-  color: #6b7280;
-}
-
-/* ==================== LAYOUT GRIDS ==================== */
-.grid-2-1 {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  margin-top: 25px;
-}
-
-.grid-1-5-1 {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-/* ==================== DARK MODE ==================== */
-.dark-mode {
-  background: #111827;
-  color: #f3f4f6;
-}
-
-.dark-mode .kpi-card,
-.dark-mode .chart-card,
-.dark-mode table {
-  background: #1f2937;
-  color: white;
-}
-
-.dark-mode th {
-  background: #000;
-}
-
-.dark-mode .toggle-btn {
-  background: white;
-  color: #111827;
-}
-
-.dark-mode .toggle-btn:hover {
-  background: #f3f4f6;
-}
-
-.dark-mode .info-box {
-  background: #374151;
-  color: #f3f4f6;
-}
-
-.dark-mode .pause-item {
-  background: #374151;
-}
-
-.dark-mode .pause-time {
-  color: #d1d5db;
-}
-
-.dark-mode .chart-card h3 {
-  color: #f3f4f6;
-}
-
-.dark-mode .kpi-title {
-  color: #d1d5db;
-}
-
-.dark-mode th,
-.dark-mode td {
-  border-bottom-color: #374151;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 900px) {
-  .charts {
-    grid-template-columns: 1fr;
+  .cards{
+    grid-template-columns:1fr;
   }
 
-  .grid-2-1 {
-    grid-template-columns: 1fr;
+  .grid{
+    grid-template-columns:1fr;
   }
 
-  .grid-1-5-1 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .header h1 {
-    font-size: 24px;
+  .topbar{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
   }
 
-  .kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  .tabs{
+    flex-direction:column;
   }
 
-  .kpi-value {
-    font-size: 24px;
-  }
-
-  .flex-container {
-    flex-direction: column;
-    gap: 15px;
-  }
 }
