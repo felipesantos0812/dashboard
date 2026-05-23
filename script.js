@@ -28,40 +28,32 @@ setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
 /* =========================
-   ABAS (FIX DEFINITIVO)
+   ABAS
 ========================= */
 
 function mostrarAba(aba) {
 
-  const dash = document.getElementById('aba-dashboard');
-  const horas = document.getElementById('aba-horas');
+  document.getElementById('aba-dashboard').style.display = 'none';
+  document.getElementById('aba-horas').style.display = 'none';
 
-  if (!dash || !horas) return;
-
-  dash.style.display = 'none';
-  horas.style.display = 'none';
-
-  const target = document.getElementById('aba-' + aba);
-
-  if (target) {
-    target.style.display = 'block';
-  }
+  const el = document.getElementById('aba-' + aba);
+  if (el) el.style.display = 'block';
 }
 
 /* =========================
-   CONVERTER HORAS (FIX)
+   SEGURANÇA HORAS
 ========================= */
 
 function converterMinutos(horaStr) {
 
   if (!horaStr || typeof horaStr !== 'string') return NaN;
 
-  const partes = horaStr.split(":");
+  const p = horaStr.split(":");
 
-  if (partes.length < 2) return NaN;
+  if (p.length < 2) return NaN;
 
-  const h = Number(partes[0]);
-  const m = Number(partes[1]);
+  const h = Number(p[0]);
+  const m = Number(p[1]);
 
   if (isNaN(h) || isNaN(m)) return NaN;
 
@@ -85,7 +77,8 @@ Papa.parse('./produtividade.csv', {
     const dados = results.data;
 
     const pontos = {};
-    const tempoTrabalhado = {};
+    const tempo = {};
+    const bipados = {};
 
     const horas = {
       '09h':0,'10h':0,'11h':0,'12h':0,'13h':0,
@@ -105,23 +98,26 @@ Papa.parse('./produtividade.csv', {
 
       nome = String(nome).trim();
 
-      if (!pontos[nome]) {
-        pontos[nome] = [];
-      }
+      /* =====================
+         CONTA BIPADOS
+      ===================== */
+      if (!bipados[nome]) bipados[nome] = 0;
+      bipados[nome]++;
+
+      /* =====================
+         HORAS
+      ===================== */
+      if (!pontos[nome]) pontos[nome] = [];
 
       const partes = String(dataHora).split(' ');
 
       if (partes.length > 1) {
 
         const hora = partes[1].substring(0,5);
-
         pontos[nome].push(hora);
 
         const hh = hora.substring(0,2) + 'h';
-
-        if (horas[hh] !== undefined) {
-          horas[hh]++;
-        }
+        if (horas[hh] !== undefined) horas[hh]++;
 
       }
 
@@ -139,50 +135,53 @@ Papa.parse('./produtividade.csv', {
 
       for (let i = 0; i < lista.length; i += 2) {
 
-        const entrada = converterMinutos(lista[i]);
-        const saida = converterMinutos(lista[i + 1]);
+        const e = converterMinutos(lista[i]);
+        const s = converterMinutos(lista[i+1]);
 
-        if (
-          !isNaN(entrada) &&
-          !isNaN(saida) &&
-          saida > entrada
-        ) {
-          total += (saida - entrada);
+        if (!isNaN(e) && !isNaN(s) && s > e) {
+          total += (s - e);
         }
 
       }
 
-      tempoTrabalhado[nome] = total / 60;
+      tempo[nome] = total / 60;
 
     });
 
     /* =========================
-       RANKING
+       RANKING FINAL (3 MÉTRICAS)
     ========================== */
 
-    const ranking =
-      Object.entries(tempoTrabalhado)
-        .map(([nome,total]) => ({
-          nome,
-          total: Number(total.toFixed(2))
-        }))
-        .sort((a,b)=>b.total-a.total);
+    const ranking = Object.keys(tempo).map(nome => {
+
+      const pedidos = bipados[nome] || 0;
+      const horasTrabalhadas = tempo[nome] || 0;
+      const media = horasTrabalhadas > 0 ? pedidos / horasTrabalhadas : 0;
+
+      return {
+        nome,
+        pedidos,
+        horas: Number(horasTrabalhadas.toFixed(2)),
+        media: Number(media.toFixed(2))
+      };
+
+    }).sort((a,b)=>b.pedidos-a.pedidos);
 
     /* =========================
-       KPI
+       KPIs
     ========================== */
 
     document.getElementById('kpiTotal').innerText =
-      ranking.reduce((a,b)=>a+b.total,0).toFixed(2);
+      ranking.reduce((a,b)=>a+b.pedidos,0);
 
     document.getElementById('kpiTop').innerText =
       ranking[0]?.nome || '-';
 
     document.getElementById('kpiMedia').innerText =
-      (ranking.reduce((a,b)=>a+b.total,0)/ranking.length).toFixed(2);
+      (ranking.reduce((a,b)=>a+b.media,0)/ranking.length).toFixed(2);
 
     document.getElementById('kpiRuim').innerText =
-      ranking.filter(i=>i.total<4).length;
+      ranking.filter(i=>i.media < 10).length;
 
     /* =========================
        TABELA DASHBOARD
@@ -193,17 +192,12 @@ Papa.parse('./produtividade.csv', {
 
     ranking.forEach(i => {
 
-      let status = 'Médio';
-
-      if (i.total > 6) status = 'Bom';
-      if (i.total > 8) status = 'Excelente';
-      if (i.total < 4) status = 'Ruim';
-
       tabela.innerHTML += `
         <tr>
           <td>${i.nome}</td>
-          <td>${i.total.toFixed(2)}h</td>
-          <td>${status}</td>
+          <td>${i.pedidos}</td>
+          <td>${i.horas}h</td>
+          <td>${i.media}</td>
         </tr>
       `;
 
@@ -218,17 +212,22 @@ Papa.parse('./produtividade.csv', {
       tabelaHoras.innerHTML = '';
 
       ranking.forEach(i => {
+
         tabelaHoras.innerHTML += `
           <tr>
             <td>${i.nome}</td>
-            <td>${i.total.toFixed(2)}h</td>
+            <td>${i.pedidos}</td>
+            <td>${i.horas}h</td>
+            <td>${i.media}</td>
           </tr>
         `;
+
       });
+
     }
 
     /* =========================
-       GRÁFICO RANKING
+       GRÁFICO TOP
     ========================== */
 
     if (rankingChart) rankingChart.destroy();
@@ -240,7 +239,7 @@ Papa.parse('./produtividade.csv', {
         data:{
           labels:ranking.slice(0,5).map(i=>i.nome),
           datasets:[{
-            data:ranking.slice(0,5).map(i=>i.total),
+            data:ranking.slice(0,5).map(i=>i.pedidos),
             backgroundColor:'#2563eb'
           }]
         }
@@ -272,18 +271,18 @@ Papa.parse('./produtividade.csv', {
        GRÁFICO HORAS TRABALHADAS
     ========================== */
 
-    const canvas = document.getElementById('mediaHorasChart');
+    const ctx = document.getElementById('mediaHorasChart');
 
-    if (canvas) {
+    if (ctx) {
 
       if (mediaHorasChart) mediaHorasChart.destroy();
 
-      mediaHorasChart = new Chart(canvas, {
+      mediaHorasChart = new Chart(ctx, {
         type:'bar',
         data:{
           labels:ranking.map(i=>i.nome),
           datasets:[{
-            data:ranking.map(i=>i.total),
+            data:ranking.map(i=>i.horas),
             backgroundColor:'#16a34a'
           }]
         }
